@@ -1,0 +1,8 @@
+#!/bin/bash
+
+SOURCEDIR=$1
+
+pushd $SOURCEDIR > /dev/null
+git log --pretty="%H" -1
+popd > /dev/null
+exit 0

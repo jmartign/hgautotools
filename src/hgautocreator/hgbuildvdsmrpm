@@ -1,0 +1,12 @@
+#!/bin/bash
+SOURCEDIR=$1
+
+pushd $SOURCEDIR 
+make distclean
+
+./autogen.sh --system || exit 1
+
+make rpm|| exit 2
+
+popd > /dev/null
+

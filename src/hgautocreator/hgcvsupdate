@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export CVSROOT=/home/cvsroot/CVS
+pushd /home/autobuild/workspace/ > /dev/null
+cvs -q update -d
+popd > /dev/null

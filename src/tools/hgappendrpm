@@ -1,0 +1,5 @@
+#!/bin/bash
+
+DTYPE=$1
+
+/usr/share/hgmakerepo/hgmakerepo.py -t $DTYPE -s /root/rpmbuild/RPMS/ -a

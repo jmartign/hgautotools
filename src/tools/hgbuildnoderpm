@@ -1,0 +1,24 @@
+#!/bin/bash
+SOURCEDIR=$1
+
+BASEDIR=$(rpm --eval %_topdir)
+
+export OVIRT_CACHE_DIR=/ovirt-cache 
+#export OVIRT_LOCAL_REPO=file://${BASEDIR}/RPMS 
+
+#backup old rpm.
+OLDRPMNAME=$BASEDIR/
+
+#pushd $SOURCEDIR > /dev/null
+pushd $SOURCEDIR
+
+make distclean
+
+./autogen.sh --with-image-minimizer || exit 1
+make || exit 2
+make dist || exit 3
+
+rpmbuild --nodeps --define "extra_release $EXTRA_RELEASE" -ta --clean *.tar.gz || exit 4
+
+popd > /dev/null
+

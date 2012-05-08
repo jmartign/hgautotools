@@ -1,0 +1,11 @@
+#!/bin/bash
+
+SOURCEDIR=$1
+
+export OVIRT_CACHE_DIR=$HOME/ovirt-cache
+echo "delete /ovirt-cache/ dir."
+rm -fr $HOME/ovirt-cache/
+
+pushd $SOURCEDIR
+make ivnh-image.iso
+popd

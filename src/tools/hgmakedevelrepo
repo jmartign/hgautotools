@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/usr/share/hgmakerepo/hgmakerepo.py -t devel -s /vbuild/CTNode/pool/RPMS/ -b /usr/share/hgmakerepo/blackfile
