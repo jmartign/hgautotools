@@ -36,11 +36,11 @@ class RepoCreator:
     """
     choose and copy the packages into its repo, then createrepo.
     """
-    def __init__(self, project_type, project_name, destpath, sourcepath, blackfile, isappend, isignore):
+    def __init__(self, projecttype, projectname, destpath, sourcepath, blackfile, isappend, isignore):
         self.sourcepath = sourcepath
         self.blackfile = blackfile
-        self.project_type = project_type
-        self.project_name = project_name
+        self.projecttype = projecttype
+        self.projectname = projectname
         self.destpath = destpath
         self.blackrpms = []
         self.isappend = isappend
@@ -97,7 +97,7 @@ class RepoCreator:
                 if "debuginfo" in rpm:
                     logging.debug("ignore package from checking name : %s. ", rpm)
                     continue
-                if self.project_type == 'product':
+                if self.projecttype == 'product':
                     if rpm in self.blackrpms:
                         logging.debug("ignore package from blacklist: %s", rpm)
                         continue
@@ -178,9 +178,9 @@ class RepoCreator:
 
 def parse_options():
     parser = optparse.OptionParser();
-    parser.add_option("-t", "--type", dest="project_type", type="string",
+    parser.add_option("-t", "--type", dest="projecttype", type="string",
                      help="project type.default is product. Now it only support devel and product.")
-    parser.add_option("-p", "--project", dest="project_name", type="string",
+    parser.add_option("-p", "--project", dest="projectname", type="string",
                      help="project name.default is CTNode.maybe we should project code name")
     parser.add_option("-d", "--destpath", dest="destpath", type="string",
                      help="repo path. default is /storage/creator/ctnode/yourprojecttype.")
@@ -195,20 +195,20 @@ def parse_options():
 
     (options, args) = parser.parse_args()
 
-    if not options.project_type:
-        options.project_type = "product"
+    if not options.projecttype:
+        options.projecttype = "product"
     else:
-        if options.project_type not in ("devel", "product"):
+        if options.projecttype not in ("devel", "product"):
             raise Usage("Error product type. Only support 'product' and 'devel'")
 
-    if not options.project_name:
-        options.project_name = "CTNode"
+    if not options.projectname:
+        options.projectname = "CTNode"
     else:
-        if options.project_name not in ("CTNode"):
+        if options.projectname not in ("CTNode"):
             raise Usage("Error product name. Only support 'CTNode' ")
 
     if not options.destpath:
-        options.destpath = "/storage/creator/"+options.project_name+'/'+options.project_type
+        options.destpath = "/storage/creator/"+options.projectname+'/'+options.projecttype
 
     if not options.sourcepath:
         options.sourcepath = "/vbuild/CTNode/pool/RPMS/"
@@ -239,7 +239,7 @@ def main():
         return ret
     logging.info("options : %s", options)
 
-    rc = RepoCreator(options.project_type, options.project_name, options.destpath, 
+    rc = RepoCreator(options.projecttype, options.projectname, options.destpath, 
                      options.sourcepath, options.blackfile, options.isappend, options.isignore)
     if rc.execute():
         return 0
