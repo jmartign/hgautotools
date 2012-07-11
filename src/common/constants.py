@@ -44,5 +44,5 @@ UPDATEREPOFROMGIT = '/usr/local/sbin/hgappendrpm'
 
 OVIRTCACHEDIR = '/ovirt-cache/'
 
-PROJECT_DICT = { 'vdsm':{'url':'git@192.168.1.200:/home/git/GitBase/vdsm','dir':'/usr/local/git/vdsm/', 'buildFromGit': 'yes'},
-                 'ovirt-node':{'url':'git@192.168.1.200:/home/git/GitBase/ovirt-node','dir':'/usr/local/git/ovirt-node/','buildFromGit': 'yes'}}
+PROJECT_DICT = { 'vdsm':{'url':'git://192.168.1.200/vdsm','dir':'/usr/local/git/vdsm/', 'buildFromGit': 'yes'},
+        'ovirt-node':{'url':'git://192.168.1.200/ovirt-node','dir':'/usr/local/git/ovirt-node/','buildFromGit': 'yes'}}
