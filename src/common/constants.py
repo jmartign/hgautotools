@@ -7,8 +7,6 @@ BAKLOGFILE = '/dev/stdout'
 
 # for autobuilder
 CVSTEMPDIR = '/home/autobuild/workspace/'
-# REPODIR = '/storage/repo/'
-REPODIR = '/storage/creator/CTNode/product/'
 STORAGEDIR = '/vbuild/CTNode/pool/RPMS/'
 CHECKRESULTKEYNAME = '.spec'
 
@@ -26,18 +24,12 @@ GITBINFILE = '/usr/bin/git'
 
 CREATEIMAGEFLAG = '/var/run/buildimg.flag'
 IMAGESTORAGE = '/storage/BACKUP/ISO/ovirt/nightlybuild/'
-#IMAGESTORAGE = '/root/'
-
 
 
 BUILDNODERPMCMD = '/usr/share/autocreator/hgbuildnoderpm'
 BUILDVDSMRPMCMD = '/usr/share/autocreator/hgbuildvdsmrpm'
 BUILDIMGCMD = '/usr/share/autocreator/hgbuildimg'
 GETLASTIDCMD = '/usr/share/autocreator/hggetlastlog'
-
-#BUILDNODERPMCMD = '/usr/share/autodoers/hgbuildnoderpm'
-#BUILDVDSMRPMCMD = '/usr/share/autodoers/hgbuildvdsmrpm'
-#BUILDIMGCMD = '/usr/share/autodoers/hgbuildimg'
 
 UPDATEREPOFROMSRC = '/usr/local/sbin/hgmakeproductrepo'
 UPDATEREPOFROMGIT = '/usr/local/sbin/hgappendrpm'
@@ -46,3 +38,21 @@ OVIRTCACHEDIR = '/ovirt-cache/'
 
 PROJECT_DICT = { 'vdsm':{'url':'git://192.168.1.200/vdsm','dir':'/usr/local/git/vdsm/', 'buildFromGit': 'yes'},
         'ovirt-node':{'url':'git://192.168.1.200/ovirt-node','dir':'/usr/local/git/ovirt-node/','buildFromGit': 'yes'}}
+
+PRODUCT_DICT = { 'ctnode':
+                         {
+                             'branch':'ct_product',
+                             'repodir':'/storage/creator/CTNode/product/',
+                             'imagesdir': '/storage/BACKUP/ISO/ovirt/nightlybuild/',
+                             'buildingflag': '/var/run/ctnodebuildingimg.flag',
+                             'updaterepobin' : '/usr/local/sbin/hgmakeproductrepo'
+                         },
+                 'bell':
+                         {
+                             'branch':'ct',
+                             'repodir':'/storage/creator/Bell/product/',
+                             'imagesdir': '/storage/BACKUP/ISO/ovirt/bell/nightlybuild',
+                             'buildingflag': '/var/run/bellbuildingimg.flag',
+                             'updaterepobin' : '/usr/local/sbin/hgmakebellrepo'
+                         }
+                }

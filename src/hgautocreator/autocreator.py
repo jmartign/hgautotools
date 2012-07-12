@@ -54,11 +54,11 @@ class AutoCreator:
             return False
         return True
 
-    def _clean_flag(self):
+    def _clean_flag(self, buildimgflag):
         try:
-            os.remove(constants.CREATEIMAGEFLAG)
+            os.remove(buildimgflag)
         except:
-            logging.error("Can't delete the file %s ." % constants.CREATEIMAGEFLAG )
+            logging.error("Can't delete the file %s ." % buildimgflag )
             return False
         return True
 
@@ -85,7 +85,7 @@ class AutoCreator:
         out = string.strip(out, '\n')
         return out
 
-    def _build_need_pkg(self):
+    def _build_need_pkg(self, branchname):
         #pull need pkg
         pkgs = constants.PROJECT_DICT.keys()
         try:
@@ -95,7 +95,7 @@ class AutoCreator:
                     pkgaddress = constants.PROJECT_DICT[pkg]['url']
                     pkglocaldir = constants.PROJECT_DICT[pkg]['dir']
                     logging.debug("It will invoke git pull using pkgaddress : %s. pkglocaldir : %s" % (pkgaddress, pkglocaldir))
-                    if not self._git_pull(pkgaddress, pkglocaldir):
+                    if not self._git_pull(pkgaddress, pkglocaldir, branchname):
                         logging.error("It can't download %s . Exiting..." % pkg)
                         return False
                     else:
@@ -117,20 +117,20 @@ class AutoCreator:
 
         return True
 
-    def _update_repo(self):
+    def _update_repo(self, updaterepobin, repodir):
         out = None
         err = None
         ret = None
-        out, err, ret = log_exec([constants.UPDATEREPOFROMSRC])
+        out, err, ret = log_exec(updaterepobin)
         if ret != 0:
             logging.error("Failed to run the command hgmakeproductrepo.")
             return False
-        if not self._copy_buildrpm():
+        if not self._copy_buildrpm(repodir):
             return False
 
         return True
 
-    def _copy_buildrpm(self):
+    def _copy_buildrpm(self, repodir):
         #copy pkg into repo
         out = None
         err = None
@@ -140,7 +140,7 @@ class AutoCreator:
                 for fd in os.listdir(self.rpmdir+'/'+subdir):
                     if fd.find("ovirt-node") != -1 or fd.find("vdsm") != -1 or fd.find("node_auth") != -1:
                         currentrpmfullpath = self.rpmdir + '/' + subdir+'/'+fd
-                        newrpmfullpath = constants.REPODIR+fd
+                        newrpmfullpath = repodir+fd
                         logging.debug("currentrpmfullpath : %s ; newrpmfullpath: %s", currentrpmfullpath, newrpmfullpath)
                         if os.path.exists(newrpmfullpath):
                             logging.debug("%s has exist. So, rm it.", newrpmfullpath)
@@ -152,7 +152,7 @@ class AutoCreator:
             return False
 
         #createrepo.
-        out, err, ret = log_exec([constants.CREATEREPOBINFILE, constants.REPODIR])
+        out, err, ret = log_exec([constants.CREATEREPOBINFILE, repodir])
         if ret != 0:
             logging.error("Failed to run the command createrepo.")
             return False
@@ -170,13 +170,13 @@ class AutoCreator:
             return False
         return True
 
-    def _init_env(self):
+    def _init_env(self, imagesdir):
         try:
-            if not os.path.exists(constants.IMAGESTORAGE):
-                os.makedirs(constants.IMAGESTORAGE)
+            if not os.path.exists(imagesdir):
+                os.makedirs(imagesdir)
             else:
-                if not os.path.isdir(constants.IMAGESTORAGE):
-                    logging.error(" %s exists, but it is not dirs. something it failed. " % constants.IMAGESTORAGE)
+                if not os.path.isdir(imagesdir):
+                    logging.error(" %s exists, but it is not dirs. something it failed. " % imagesdir)
                     return False
                 else:
                     return True
@@ -188,8 +188,8 @@ class AutoCreator:
             logging.error(traceback.format_exc())
             return False
         return True
-    
-    def _create_img(self):
+
+    def _create_img(self, imagesdir):
         pkgs = constants.PROJECT_DICT.keys()
         try:
             for pkg in pkgs:
@@ -207,7 +207,7 @@ class AutoCreator:
                         logging.error("Failed to create the image. ")
                         #return False
                     currentimgfullpath = imgcreatedir + "ivnh-image-1.0.0-Alpha.iso"
-                    if not self._copy_img_to_storage(currentimgfullpath, constants.IMAGESTORAGE):
+                    if not self._copy_img_to_storage(currentimgfullpath, imagesdir):
                         return False
         except:
             logging.error("Failed to create image. Traceback:")
@@ -233,8 +233,8 @@ class AutoCreator:
             return False
         return True
 
-    def _check_update(self):
-        if os.path.exists(constants.CREATEIMAGEFLAG) or \
+    def _check_update(self, buildimgflag):
+        if os.path.exists(buildimgflag) or \
            not LoggerUtil().isExistID("ovirt-node", self.node_hashid) or \
            not LoggerUtil().isExistID("vdsm", self.vdsm_hashid):
             logging.debug("It should create image. because it exists some update.")
@@ -242,47 +242,60 @@ class AutoCreator:
         else:
             logging.debug("It shouldn't create image. because it doesn't exist some update.")
             return False
-        
-    def _clean_env(self):
-        if not self._clean_flag():
+
+    def _clean_env(self, buildimgflag):
+        if not self._clean_flag(buildimgflag):
             logging.error("Failed to clean flag file.")
         if not self._clean_git_dirs():
             logging.error("Failed to clean git dirs. ")
         return True
 
     def execute(self):
+        products = constants.PRODUCT_DICT.keys()
+        for product in products:
+            branchname = products[product]['branch']
+            repodir = products[product]['repodir']
+            imagesdir = products[product]['imagesdir']
+            buildimgflag = products[product]['buildimgflag']
+            updaterepobin = products[product]['updaterepobin']
+            if self.execute_unit(branchname, repodir, imagesdir, buildimgflag, updaterepobin):
+                logging.error("Failed to create product: %s", product)
+                return False
+        return True
+
+    def execute_unit(self, branchname, repodir, imagesdir, buildimgflag, updaterepobin):
         """
         main process of this class.
         """
         logging.debug("First step: build env.")
-        if not self._init_env():
+        if not self._init_env(imagesdir):
             logging.error("Failed to init env. so Exit...")
             return False
 
         logging.debug("Second step: it will build need pkg.")
-        if not self._build_need_pkg():
+        if not self._build_need_pkg(branchname):
             logging.error("Failed to build needed pkgs.")
             return False
 
         logging.debug("Third step: it will check whether it needs build image.")
-        if not self._check_update():
+        if not self._check_update(buildimgflag):
             logging.info("No any update exists, exiting...")
-            if not self._clean_env():
+            if not self._clean_env(buildimgflag):
                 return False
             return True
 
         logging.debug("Fourth step: It will update repo. ")
-        if not self._update_repo():
+        if not self._update_repo(updaterepobin, repodir):
             logging.error("Failed to update repo. ")
             return False
 
         logging.debug("Fifth step: it will create_img. ")
-        if not self._create_img():
+        if not self._create_img(imagesdir):
             logging.error("Failed to create image. ")
             return False
 
         logging.debug("Sixth step: clean env...")
-        if not self._clean_env():
+        if not self._clean_env(buildimgflag):
             return False
 
         return True
