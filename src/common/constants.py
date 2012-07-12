@@ -44,7 +44,7 @@ PRODUCT_DICT = { 'ctnode':
                              'branch':'ct_product',
                              'repodir':'/storage/creator/CTNode/product/',
                              'imagesdir': '/storage/BACKUP/ISO/ovirt/nightlybuild/',
-                             'buildingflag': '/var/run/ctnodebuildingimg.flag',
+                             'buildimgflag': '/var/run/ctnodebuildingimg.flag',
                              'updaterepobin' : '/usr/local/sbin/hgmakeproductrepo'
                          },
                  'bell':
@@ -52,7 +52,7 @@ PRODUCT_DICT = { 'ctnode':
                              'branch':'ct',
                              'repodir':'/storage/creator/Bell/product/',
                              'imagesdir': '/storage/BACKUP/ISO/ovirt/bell/nightlybuild',
-                             'buildingflag': '/var/run/bellbuildingimg.flag',
+                             'buildimgflag': '/var/run/bellbuildingimg.flag',
                              'updaterepobin' : '/usr/local/sbin/hgmakebellrepo'
                          }
                 }

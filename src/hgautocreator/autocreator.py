@@ -65,6 +65,7 @@ class AutoCreator:
     def _git_pull(self, pkgaddress, pkglocaldir, branchname = "ct_product"):
         try:
             logging.debug("Enter _git_pull function.")
+            logging.debug("the product is using branch: %s . pkgaddress: %s .", branchname, pkgaddress)
             ret = pexpect.run('%s clone -b %s %s %s' % (constants.GITBINFILE, branchname, pkgaddress, pkglocaldir), events={'password: ':"abc123\n\r"})
             logging.debug("pexpect run ret : %s " % ret)
         except:
@@ -253,14 +254,14 @@ class AutoCreator:
     def execute(self):
         products = constants.PRODUCT_DICT.keys()
         for product in products:
-            branchname = products[product]['branch']
-            repodir = products[product]['repodir']
-            imagesdir = products[product]['imagesdir']
-            buildimgflag = products[product]['buildimgflag']
-            updaterepobin = products[product]['updaterepobin']
+            branchname = constants.PRODUCT_DICT[product]['branch']
+            repodir = constants.PRODUCT_DICT[product]['repodir']
+            imagesdir = constants.PRODUCT_DICT[product]['imagesdir']
+            buildimgflag = constants.PRODUCT_DICT[product]['buildimgflag']
+            updaterepobin = constants.PRODUCT_DICT[product]['updaterepobin']
+            logging.debug("it will create image for product : %s", product)
             if self.execute_unit(branchname, repodir, imagesdir, buildimgflag, updaterepobin):
                 logging.error("Failed to create product: %s", product)
-                return False
         return True
 
     def execute_unit(self, branchname, repodir, imagesdir, buildimgflag, updaterepobin):
