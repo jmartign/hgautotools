@@ -71,11 +71,11 @@ class LoggerUtil:
         add change log (just snapshot SHA-1 hash for ovirt-node and vdsm. )
         for each build and check last SHA-1 hash.
     """
-    def __init__(self, vdsm_hashid = "", node_hashid = "", image_name = ""):
+    def __init__(self, vdsm_hashid = "", node_hashid = "", image_name = "", log_dir = ""):
         self.vdsm_hi = vdsm_hashid
         self.node_hi = node_hashid
         self.image_name = image_name
-        self.changelog_path = constants.IMAGESTORAGE + "ChangeLog"
+        self.changelog_path = log_dir + "ChangeLog"
         self.file_obj = None
 
     def recordLog(self):

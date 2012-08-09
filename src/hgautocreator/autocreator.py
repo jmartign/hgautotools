@@ -226,7 +226,7 @@ class AutoCreator:
             logging.debug("it will move from %s to %s", fromdir, newimagefullpath)
             shutil.move(fromdir, newimagefullpath)
             logging.debug("it will record the log in Changelog.")
-            if not LoggerUtil(vdsm_hashid = self.vdsm_hashid, node_hashid = self.node_hashid, image_name = newimagename).recordLog():
+            if not LoggerUtil(vdsm_hashid = self.vdsm_hashid, node_hashid = self.node_hashid, image_name = newimagename, log_dir = todir).recordLog():
                 return False
         except:
             logging.error("Failed to move img to storage.")
@@ -252,6 +252,8 @@ class AutoCreator:
         return True
 
     def execute(self):
+        if not self._clean_git_dirs():
+            logging.error("Failed to clean git dirs. ")
         products = constants.PRODUCT_DICT.keys()
         for product in products:
             branchname = constants.PRODUCT_DICT[product]['branch']

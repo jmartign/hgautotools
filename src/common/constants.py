@@ -36,8 +36,8 @@ UPDATEREPOFROMGIT = '/usr/local/sbin/hgappendrpm'
 
 OVIRTCACHEDIR = '/ovirt-cache/'
 
-PROJECT_DICT = { 'vdsm':{'url':'git://192.168.1.200/vdsm','dir':'/usr/local/git/vdsm/', 'buildFromGit': 'yes'},
-        'ovirt-node':{'url':'git://192.168.1.200/ovirt-node','dir':'/usr/local/git/ovirt-node/','buildFromGit': 'yes'}}
+PROJECT_DICT = { 'vdsm':{'url':'git://192.168.0.200/vdsm','dir':'/usr/local/git/vdsm/', 'buildFromGit': 'yes'},
+        'ovirt-node':{'url':'git://192.168.0.200/ovirt-node','dir':'/usr/local/git/ovirt-node/','buildFromGit': 'yes'}}
 
 PRODUCT_DICT = { 'ctnode':
                          {
@@ -49,9 +49,9 @@ PRODUCT_DICT = { 'ctnode':
                          },
                  'bell':
                          {
-                             'branch':'ct',
+                             'branch':'bell',
                              'repodir':'/storage/creator/Bell/product/',
-                             'imagesdir': '/storage/BACKUP/ISO/ovirt/bell/nightlybuild',
+                             'imagesdir': '/storage/BACKUP/ISO/ovirt/bell/nightlybuild/',
                              'buildimgflag': '/var/run/bellbuildingimg.flag',
                              'updaterepobin' : '/usr/local/sbin/hgmakebellrepo'
                          }

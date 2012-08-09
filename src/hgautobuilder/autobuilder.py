@@ -108,7 +108,7 @@ class AutoBuilder:
                  pkgname = sout[pkgidx+1:newidx+len(constants.BUILDRPMKEYNAME)]
                  logging.debug("pkg name named " +pkgname+ " will be added to binrpm array.")
                  self.binrpm.append(pkgname)
-                 oldidx = newidx+len(constants.BUILDRPMKEYNAME)+1             
+                 oldidx = newidx+len(constants.BUILDRPMKEYNAME)+1
          except:
              logging.error("Failed to parse build result...The trace back is :")
              logging.error(traceback.format_exc())
