@@ -249,6 +249,8 @@ class AutoCreator:
             logging.error("Failed to clean flag file.")
         if not self._clean_git_dirs():
             logging.error("Failed to clean git dirs. ")
+        if not self._clean_dir():
+            logging.error("Failed to clean rpm dirs. ")
         return True
 
     def execute(self):
