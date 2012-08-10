@@ -234,10 +234,10 @@ class AutoCreator:
             return False
         return True
 
-    def _check_update(self, buildimgflag):
+    def _check_update(self, buildimgflag, imagesdir):
         if os.path.exists(buildimgflag) or \
-           not LoggerUtil().isExistID("ovirt-node", self.node_hashid) or \
-           not LoggerUtil().isExistID("vdsm", self.vdsm_hashid):
+           not LoggerUtil().isExistID("ovirt-node", self.node_hashid, imagesdir) or \
+           not LoggerUtil().isExistID("vdsm", self.vdsm_hashid, imagesdir):
             logging.debug("It should create image. because it exists some update.")
             return True
         else:
@@ -281,7 +281,7 @@ class AutoCreator:
             return False
 
         logging.debug("Third step: it will check whether it needs build image.")
-        if not self._check_update(buildimgflag):
+        if not self._check_update(buildimgflag, imagesdir):
             logging.info("No any update exists, exiting...")
             if not self._clean_env(buildimgflag):
                 return False

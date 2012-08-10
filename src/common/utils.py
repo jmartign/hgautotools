@@ -102,8 +102,9 @@ class LoggerUtil:
             return False
         return True
 
-    def isExistID(self, pkg_name, pkg_id):
+    def isExistID(self, pkg_name, pkg_id, log_dir):
         file_obj = None
+        self.changelog_path = log_dir + "ChangeLog"
         try:
             if not os.path.exists(self.changelog_path):
                 return False
